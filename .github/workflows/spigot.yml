@@ -1,0 +1,33 @@
+name: Build Spigot
+
+on:
+  schedule:
+    # * is a special character in YAML so you have to quote this string
+    - cron:  '0 0 1/7 * *'
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-java@v2
+        with:
+          distribution: 'adopt' # See 'Supported distributions' for available options
+          java-version: '8'
+      - run: |
+          curl -O https://hub.spigotmc.org/jenkins/job/BuildTools/lastSuccessfulBuild/artifact/target/BuildTools.jar
+          java -jar -Xmx1024M BuildTools.jar
+    
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - 
+        run: |
+          set -xe
+          NAME="Auto-Build $(date +'%Y-%m-%d %H:%M')"
+          TAGNAME="autobuild-$(date +'%Y-%m-%d-%H-%M')"
+          hub release create $(for a in spigot-*.jar; do echo -a $a; done) -m "$NAME" -t "main" "$TAGNAME"
+          echo "::set-output name=tag_name::${TAGNAME}"
+        env:
+          GITHUB_TOKEN: ${{ github.token }}

@@ -18,11 +18,6 @@ jobs:
       - run: |
           curl -O https://hub.spigotmc.org/jenkins/job/BuildTools/lastSuccessfulBuild/artifact/target/BuildTools.jar
           java -jar -Xmx1024M BuildTools.jar
-    
-  publish:
-    runs-on: ubuntu-latest
-    needs: build
-    steps:
       - 
         run: |
           set -xe
@@ -32,3 +27,4 @@ jobs:
           echo "::set-output name=tag_name::${TAGNAME}"
         env:
           GITHUB_TOKEN: ${{ github.token }}
+

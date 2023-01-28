@@ -1,9 +1,10 @@
 name: Build Spigot
 
 on:
-  schedule:
+  # schedule:
     # * is a special character in YAML so you have to quote this string
-    - cron:  '0 0 * * 1'
+    # - cron:  '0 0 * * 1'
+  # 手动触发
   workflow_dispatch:
 
 jobs:
@@ -14,12 +15,11 @@ jobs:
       - uses: actions/setup-java@v2
         with:
           distribution: 'adopt' # See 'Supported distributions' for available options
-          java-version: '16'
+          java-version: '17'
       - run: |
           curl -O https://hub.spigotmc.org/jenkins/job/BuildTools/lastSuccessfulBuild/artifact/target/BuildTools.jar
           java -jar -Xmx1024M BuildTools.jar
-      - 
-        run: |
+      - run: |
           set -xe
           NAME="Auto-Build $(date +'%Y-%m-%d %H:%M')"
           TAGNAME="autobuild-$(date +'%Y-%m-%d-%H-%M')"

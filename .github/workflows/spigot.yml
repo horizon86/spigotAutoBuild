@@ -9,7 +9,7 @@ on:
 
 jobs:
   build:
-    name: Build Spigot
+    name: Build Spigot Workflow
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -25,5 +25,11 @@ jobs:
         run: bash upload.sh
         env:
           GITHUB_TOKEN: ${{ github.token }}
-      - name: Keepalive Workflow
-        uses: gautamkrishnar/keepalive-workflow@v1
+  keepalive-job:
+      name: Keepalive Workflow
+      runs-on: ubuntu-latest
+      permissions:
+        actions: write
+      steps:
+        - uses: actions/checkout@v4
+        - uses: gautamkrishnar/keepalive-workflow@v2
